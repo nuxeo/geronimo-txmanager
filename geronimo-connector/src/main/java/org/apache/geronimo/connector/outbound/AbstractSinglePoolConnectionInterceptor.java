@@ -343,6 +343,7 @@ public abstract class AbstractSinglePoolConnectionInterceptor implements Connect
             added = getPartitionMaxSize() > getIdleConnectionCount();
             if (added) {
                 doAdd(mci);
+                mci.setPoolInterceptor(this);
             }
         }
         return added;
