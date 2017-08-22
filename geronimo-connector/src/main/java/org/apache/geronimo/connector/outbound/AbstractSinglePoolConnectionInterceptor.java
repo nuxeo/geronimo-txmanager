@@ -94,6 +94,8 @@ public abstract class AbstractSinglePoolConnectionInterceptor implements Connect
             }
 
         } catch (InterruptedException ie) {
+            // restore interrupted status
+            Thread.currentThread().interrupt();
             throw new ResourceException("Interrupted while requesting permit.", ie);
         } // end of try-catch
     }
