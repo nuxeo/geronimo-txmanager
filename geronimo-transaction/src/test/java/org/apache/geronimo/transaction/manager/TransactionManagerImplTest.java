@@ -329,30 +329,30 @@ public class TransactionManagerImplTest extends TestCase {
         Thread.sleep((timeout/2));
         tm.commit();
         // Its a failure if exception occurs.
-    }    
-      
+    }
+
     // resume throws InvalidTransactionException on completed tx (via commit)
     public void testResume1() throws Exception {
         Transaction tx;
         assertEquals(Status.STATUS_NO_TRANSACTION, tm.getStatus());
-        tm.begin();   
+        tm.begin();
         assertEquals(Status.STATUS_ACTIVE, tm.getStatus());
         tx = tm.getTransaction();
         assertNotNull(tx);
         assertEquals(Status.STATUS_ACTIVE, tx.getStatus());
-        
+
         tm.commit();
         assertEquals(Status.STATUS_NO_TRANSACTION, tm.getStatus());
         assertNull(tm.getTransaction());
-        
+
         try {
             tm.resume(tx);
             fail();
         } catch (InvalidTransactionException e) {
             // expected
-        }        
+        }
     }
-    
+
     // resume throws InvalidTransactionException on completed tx (via rollback)
     public void testResume2() throws Exception {
         Transaction tx;
@@ -373,16 +373,16 @@ public class TransactionManagerImplTest extends TestCase {
 
         tm.rollback();
         assertEquals(Status.STATUS_NO_TRANSACTION, tm.getStatus());
-        assertNull(tm.getTransaction());     
-        
+        assertNull(tm.getTransaction());
+
         try {
             tm.resume(tx);
             fail();
         } catch (InvalidTransactionException e) {
             // expected
-        }   
+        }
     }
-    
+
     // resume work on null tx
     public void testResume3() throws Exception {
         Transaction tx;
@@ -400,16 +400,16 @@ public class TransactionManagerImplTest extends TestCase {
         // tx should be null
         tx = tm.suspend();
         assertNull(tx);
-        
+
         try {
             tm.resume(tx);
         } catch (InvalidTransactionException e) {
             // null is considered valid so we don't expect InvalidTransactionException here
             e.printStackTrace();
             fail();
-        }   
+        }
     }
-    
+
     // resume works on any valid tx
     public void testResume4() throws Exception {
         Transaction tx;
@@ -428,10 +428,10 @@ public class TransactionManagerImplTest extends TestCase {
             // tx is considered valid so we don't expect InvalidTransactionException here
             e.printStackTrace();
             fail();
-        }   
+        }
 
         tm.commit();
         assertEquals(Status.STATUS_NO_TRANSACTION, tm.getStatus());
-        assertNull(tm.getTransaction()); 
+        assertNull(tm.getTransaction());
     }
 }

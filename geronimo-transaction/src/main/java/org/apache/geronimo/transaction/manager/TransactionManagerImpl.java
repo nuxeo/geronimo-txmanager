@@ -120,7 +120,7 @@ public class TransactionManagerImpl implements TransactionManager, UserTransacti
             fireThreadAssociated(tx);
             activeCount.getAndIncrement();
         }
-    } 
+    }
 
     private void unassociate() {
         Transaction tx = getTransaction();
@@ -185,7 +185,7 @@ public class TransactionManagerImpl implements TransactionManager, UserTransacti
             if (!(tx instanceof TransactionImpl)) {
                 throw new InvalidTransactionException("Cannot resume foreign transaction: " + tx);
             }
-            
+
             associate((TransactionImpl) tx);
         }
     }
@@ -212,7 +212,7 @@ public class TransactionManagerImpl implements TransactionManager, UserTransacti
     }
 
     public Object getTransactionKey() {
-    	TransactionImpl tx = (TransactionImpl) getTransaction();
+        TransactionImpl tx = (TransactionImpl) getTransaction();
         return tx == null ? null: tx.getTransactionKey();
     }
 
