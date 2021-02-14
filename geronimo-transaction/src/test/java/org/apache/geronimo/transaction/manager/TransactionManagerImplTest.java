@@ -45,19 +45,29 @@ public class TransactionManagerImplTest extends TestCase {
 
     TransactionManagerImpl tm;
 
+    long timeDelta;
+
     protected void setUp() throws Exception {
         tm = createTransactionManager();
+        timeDelta = 0;
     }
 
     private TransactionManagerImpl createTransactionManager() throws XAException {
         return new TransactionManagerImpl(10,
-                new XidFactoryImpl("WHAT DO WE CALL IT?".getBytes()), transactionLog);
+                new XidFactoryImpl("WHAT DO WE CALL IT?".getBytes()), transactionLog, new TestTimeProvider());
     }
 
     protected void tearDown() throws Exception {
         tm = null;
     }
 
+    public class TestTimeProvider implements CurrentTimeMsProvider {
+        @Override
+        public long now() {
+            return System.currentTimeMillis() + timeDelta;
+        }
+
+    }
     public void testNoResourcesCommit() throws Exception {
         assertEquals(Status.STATUS_NO_TRANSACTION, tm.getStatus());
         tm.begin();
@@ -312,8 +322,7 @@ public class TransactionManagerImplTest extends TestCase {
         long timeout = tm.getTransactionTimeoutMilliseconds(0L);
         tm.setTransactionTimeout((int)timeout/4000);
         tm.begin();
-        System.out.println("Test to sleep for " + timeout + " millisecs");
-        Thread.sleep(timeout);
+        timeDelta += timeout;
         try
         {
             tm.commit();
@@ -325,8 +334,7 @@ public class TransactionManagerImplTest extends TestCase {
 
         // Now test if the default timeout is active
         tm.begin();
-        System.out.println("Test to sleep for " + (timeout/2) + " millisecs");
-        Thread.sleep((timeout/2));
+        timeDelta += timeout/2;
         tm.commit();
         // Its a failure if exception occurs.
     }
